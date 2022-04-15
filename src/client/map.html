@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=div.app, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            width: 700px;
+            margin-bottom: 20px;
+        }
+
+         .productos>li {
+            align-self: center;
+            border: 1px solid gray;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-transform: capitalize;
+        }
+           .productos>li h4 {
+            margin: 5px 0;
+        }
+
+        .productos>li img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .productos>li span {
+            font-size: 10px;
+            font-weight: bold;
+            background-color: gainsboro;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+
+        .productos>li p {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+       
+</style>
+</head>
+<body>
+  <div id="app"></div>
+ 
+  <script>
+        const formatoSoles = (monto) => {
+        let formatoSoles = new Intl.NumberFormat('es-Co', {
+            style: 'currency',
+            currency: 'PES',
+        });
+        return formatoSoles.format(monto);
+    };
+
+    const products = [
+        {
+            id: 1,
+            name: "platano",
+            stock: 10,
+            price: 2.0,
+            image: "https://i.ibb.co/7bC8szm/platano.png",
+            category: {
+                id: 1,
+                name: "frutas frescas",
+                image: "https://i.ibb.co/BqWwTkD/categoria-fruta.webp",
+            },
+        },
+        {
+            id: 2,
+            name: "fresa",
+            stock: 10,
+            price: 5.0,
+            image: "https://i.ibb.co/hKNwfmP/fresa.png",
+            category: {
+                id: 1,
+                name: "frutas frescas",
+                image: "https://i.ibb.co/BqWwTkD/categoria-fruta.webp",
+            },
+        },
+        {
+            id: 3,
+            name: "mandarina",
+            stock: 10,
+            price: 3.5,
+            image: "https://i.ibb.co/7bC8szm/platano.png",
+            category: {
+                id: 1,
+                name: "frutas frescas",
+                image: "https://i.ibb.co/M2Pt0xX/mandarina.png",
+            },
+        },
+    ];
+    const app = document.getElementById('app')
+    const lista =products.map((item)=>{
+        
+        return `
+        <li>
+        <span>${item.category.name}</span>
+        <h4>${item.name}</h4>
+        <p>
+           <label>${formatoSoles(item.price)}</label>
+           <label>${item.stock} productos</label>  
+        </p>
+        <img src="${item.image}" alt="${item.name}">
+        </li>
+        `;
+
+    // app.innerHTML += `<li>${product.name} - ${product.price}   </li>`
+    });
+    console.log(lista)
+    app.innerHTML = `<ul class="productos">${lista.join('')}</ul>`
+
+  </script>
+</body>
+</html>
