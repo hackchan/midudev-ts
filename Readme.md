@@ -363,7 +363,7 @@ A su vez se puede usar también con funciones de la siguiente forma:
 let result = someInterface.customMethod?.();
 ```
 
-## FUNTIONS
+## FUNCTIONS
 En TS tenemos que declarar el tipo de dato de cada parámetro en la función. Además de que TS nos va a marcar error en caso de que agreguemos mas o menos parámetros de los requeridos.
 
 ```ts
@@ -384,7 +384,7 @@ createPerson(0, true) // ERROR
 createPerson('o', 32, true) // ERROR
 ```
 
-## FUNTIONS RETURN
+## FUNCTIONS RETURN
 
 En TS podemos especificar que tipo de dato retorna la función e incluso podemos indicar cuando esa funcion no retorna nada.
 
@@ -400,7 +400,7 @@ function printName(name: string): void {
 }
 ```
 
-## FUNTIONS OBJECTS AND TYPES
+## FUNCTIONS OBJECTS AND TYPES
 Con los type Alias también podemos definir la estructura de un objeto como tipo de dato. Por lo que ahora podriamos hacer lo siguiente:
 ```ts
 type Product = {
@@ -506,3 +506,137 @@ function createUser(
 En donde ya no usamos ?:, si no que ahora le asignamos un valor en caso de que ninguno sea asignado.
 .
 Las dos formas son validas y soportadas por TS
+
+## OVERLOADS
+
+La manera en como yo lo hago normalmente es con el operador as para indicarle a TS el tipo de dato que quiero en ciertos casos.
+
+```ts
+const resArr = parseStr("Marisol") as string[];
+```
+En conclusión, lo que vamos a hacer es escribir de nuevo la función con los parámetros y su tipo de dato de retorno antes de declarar la función como tal, para que de esa forma TS sepa en que casos se retorna cierto valor. Se que no le entendiste, veamos un ejemplo.
+
+```ts 
+type customType = string | string[];
+
+function parseStr(arg: string): string[]
+function parseStr(arg: string[]): string
+
+function parseStr(arg: customType): customType {
+  // code here...
+}
+```
+Las dos primeras funciones parseStr son las que se le llama sobrecarga de funciones y le ayuda a TS a predecir que tipo de dato retornar en ciertos casos específicos.
+
+## INTERFACES
+Las interfaces funcionan muy similar a como lo hace type, pero en las interfaces solo aplica para los objetos
+
+```ts
+type Size = "S" | "M" | "L";
+type User = {
+  id: string,
+  name: string
+}
+interface UserInterface {
+  id: string,
+  name: string  
+}
+```
+¿Entonces, porque usar interfaces si puedo usar type?
+La razón es sencilla, con las interfaces podemos heredar otras interfaces, y con los type no podemos hacer eso.
+
+```ts
+interface HumanInterface {
+  name: string,
+  lastName: string
+}
+interface HeroInterface extends HumanInterface {
+  superPower: string
+}
+```
+
+## EXTENDS
+Así como las clases en POO, en las interfaces también podemos hacer uso de la herencia. De esta forma podemos tener una interface base que sea heredada por todas las demás interfaces en la app. Funciona de la siguiente manera
+
+```ts 
+interface BaseModel {
+    id: string | number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+interface User extends BaseModel {
+    name: string;
+    lastName: string;
+}
+```
+
+
+## READONLY PROPERTY
+
+Como su nombre lo indica, este feature de TS nos ayuda a tener ciertos atributos solo de lectura. Lo que significa que no pueden ser modificados. Un buen caso de uso es el id y el createdAt.
+
+```ts
+interface BaseModel {
+  readonly id: string | number;
+  readonly createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+## OMIT & PICK TYPE
+Estos tipos de datos nos permiten crear nuevas interfaces basadas de otras, pero omitiendo o seleccionando solo ciertos valores. Estos funcionan de la siguiente forma
+
+```ts
+interface Employee {
+    name: string;
+    lastName: string;
+    salary: number;
+    company: string
+}
+
+interface Unemployee extends Omit<Employee, 'salary', 'company'> {}
+```
+Con Pick funciona de la misma manera, solo que se eligen ciertos valores en vez de omitirlos
+
+## PARTIAL & REQUIRED
+Estos dos tipos de datos nos sirven para declarar que todos los campos de una interfaz son opcionales u obligatorios.
+
+```ts
+interface Product {
+    title: string;
+    price: number;
+    category: string;
+    size?: string;
+}
+
+type UpdateProduct = Partial<Product>
+type StrictProduct = Required<Product>
+```
+
+## TYPE BY INDICE
+
+Como acceder al tipado de cierta propiedad?
+Lo hacemos de una manera muy similar a la cual accedemos a valores en arrays dentro de JS, pero en este caso, en lugar de hacerlo en un array, lo aplicamos a una interfaz.
+
+```ts
+interface Human {
+  name: string;
+  age: number;
+  isAlien: boolean;
+}
+
+function createHuman(name: Human["name"]) {
+    // code
+}
+```
+
+En este caso, el parámetro name en la función createHuman seria un string. La ventaja de esto es que si nosotros cambiamos ese tipo de dato por cualquier otra cosa, se cambia en automático.
+
+## READONLY ARRAY
+Este tipo de dato es un array, pero la principal diferencia con los arrays “normales” es que no existen ninguno de los métodos de mutación, tales como pop, push, shift, etc.
+
+```ts
+cont arr: ReadonlyArray<number> = [1,2,3,4,5]
+```
+En caso de tratar de usar alguno de estos metodos nos arroja un error
